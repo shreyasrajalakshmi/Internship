@@ -6,11 +6,11 @@ def is_palindrome(word):
     return cleaned == cleaned[::-1]
 
 def main():
-    word = input("Enter a word or phrase: ")
+    word = input("Enter a word : ")
     if is_palindrome(word):
-        print(f'"{word}" is a palindrome!')
+        print(f'"{word}" is a palindrome🤩')
     else:
-        print(f'"{word}" is not a palindrome.')
+        print(f'"{word}" is not a palindrome🙁')
 
 if __name__ == "__main__":
     main()
