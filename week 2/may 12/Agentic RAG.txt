@@ -1,0 +1,23 @@
+Agentic RAG (Retrieval-Augmented Generation) is an advanced variant of 
+the standard RAG architecture. In typical RAG, a model retrieves relevant
+ information from external data sources, like vector databases or knowledge
+  bases, to augment its responses during generation. Agentic RAG extends
+   this idea by integrating the model with agent-like behaviors, enabling 
+   it to autonomously perform tasks, interact with APIs, and adapt its
+    retrieval strategies dynamically.
+
+Agentic RAG models act as 'agents' that not only fetch information but 
+also make decisions based on the context of the query. They can navigate 
+through multiple data sources, refine search queries, and even trigger API 
+calls to fetch real-time information or perform transactions. This agent-like
+ behavior allows for deeper contextual understanding and more robust,
+  real-time interactive responses.
+
+For example, in a conversational AI setting, an Agentic RAG could understand
+ a user’s query, retrieve the necessary information from a vector database, 
+ and also trigger external services (like weather APIs, news databases, or
+  even financial data streams) to provide highly accurate and contextual responses.
+
+This concept is pushing the boundaries of traditional RAG by merging it with 
+aspects of autonomous agents, opening the door to more intelligent, interactive,
+ and responsive AI systems.
