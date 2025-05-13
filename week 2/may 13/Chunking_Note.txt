@@ -1,0 +1,11 @@
+Chunking
+
+Chunking is a cognitive process used to enhance memory and information processing by grouping individual pieces of data into larger, more manageable units called 'chunks.' This method is widely used in both psychology and computer science to simplify complex information and improve learning efficiency.
+
+The concept of chunking is based on the idea that the human brain is better at recalling grouped information than isolated bits. For example, a phone number like 1234567890 is easier to remember when chunked as 123-456-7890. This strategy reduces cognitive load by leveraging familiar patterns.
+
+In computer science, chunking is applied in data processing, text segmentation, and memory optimization. For instance, large datasets are processed in smaller chunks to manage memory more efficiently and avoid overflow issues. In natural language processing (NLP), chunking helps in breaking down large text into meaningful phrases or entities for easier analysis.
+
+Chunking also plays a critical role in machine learning, where datasets are divided into smaller segments for batch processing during model training. This not only speeds up computation but also allows for better gradient updates during learning.
+
+Overall, chunking is an essential strategy for managing information complexity, enhancing learning, and optimizing computational tasks.
