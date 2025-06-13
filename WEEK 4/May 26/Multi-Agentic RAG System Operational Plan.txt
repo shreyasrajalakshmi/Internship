@@ -1,0 +1,188 @@
+# Multi-Agentic RAG System Operational Plan
+
+## Overview
+This plan describes how the seven agents—DataIngestion, Embedding, Storage (backend); Query, Retriever, Answer, Feedback (frontend)—work together in a multi-agentic Retrieval-Augmented Generation (RAG) system to process course data, generate syllabus-aligned, exam-focused, personalized answers, and incorporate user feedback. The system is modular, with backend agents preparing and storing data, frontend agents handling user interactions, and a center section (ChromaDB and SQLite3/MongoDB) serving as shared data stores. Each agent has a specific role, uses designated tools, and collaborates via defined data flows to ensure efficient, accurate, and adaptive responses.
+
+## System Components
+- **Agents**:
+  - Backend: DataIngestion, Embedding, Storage.
+  - Frontend: Query, Retriever, Answer, Feedback.
+- **Tools**:
+  - Data Parser (DataIngestion): Parses and validates inputs.
+  - Database Loader (Storage): Stores structured data.
+  - Text Chunker, Embedding Model (Embedding): Chunks and embeds unstructured data.
+  - ChromaDB Query Tool (Retriever): Queries data stores.
+  - Language Model (Answer): Generates answers.
+  - Feedback Parser (Feedback): Processes user feedback.
+- **Data Stores**:
+  - ChromaDB: Stores embeddings of unstructured data (e.g., syllabus, textbooks).
+  - SQLite3/MongoDB: Stores structured data (e.g., metadata, CO-PO mappings, questions).
+- **Inputs/Outputs**:
+  - Inputs: Course Data (admin), User Query, User Feedback.
+  - Output: Personalized Answer.
+
+## Operational Flow
+The system operates in two primary workflows—backend (admin-side data preparation) and frontend (user-side query processing)—connected via the center data stores. The Feedback agent provides an iterative loop to enhance personalization.
+
+### 1. Backend Workflow (Data Preparation)
+The backend agents (DataIngestion, Embedding, Storage) process and store admin-provided Course Data, preparing it for frontend retrieval.
+
+#### DataIngestion Agent
+- **Role**: Accepts and validates Course Data (e.g., course metadata, syllabus, textbooks, questions, CO-PO mappings, web data).
+- **Operation**:
+  - Receives raw inputs from the admin (e.g., CSV files, PDFs, URLs).
+  - Uses the **Data Parser** tool to validate data integrity (e.g., checks for missing fields, malformed syllabus) and parse into structured (e.g., metadata, CO-PO mappings) and unstructured (e.g., syllabus text, textbook content) formats.
+  - Routes structured data to the StorageAgent and unstructured data to the EmbeddingAgent.
+- **Output**:
+  - Structured data (e.g., JSON with metadata, CO-PO mappings).
+  - Unstructured data (e.g., raw text from syllabus, textbooks).
+- **Collaboration**:
+  - Sends structured data to StorageAgent for database storage.
+  - Sends unstructured data to EmbeddingAgent for embedding.
+
+#### StorageAgent
+- **Role**: Stores structured data in SQLite3/MongoDB for precise retrieval.
+- **Operation**:
+  - Receives structured data (e.g., course code, CO-PO mappings, question banks) from DataIngestion Agent.
+  - Uses the **Database Loader** tool to format and insert data into SQLite3/MongoDB (e.g., creates tables/documents for metadata, mappings, questions).
+  - Ensures data is indexed for efficient querying (e.g., by course code, CO-PO).
+- **Output**: Structured data stored in SQLite3/MongoDB (e.g., tables with course metadata, CO-PO alignments).
+- **Collaboration**:
+  - Stores data in SQLite3/MongoDB, accessible by RetrieverAgent for frontend queries.
+  - Works in parallel with EmbeddingAgent, which handles unstructured data.
+
+#### EmbeddingAgent
+- **Role**: Processes unstructured data into embeddings for semantic search, stored in ChromaDB.
+- **Operation**:
+  - Receives unstructured data (e.g., syllabus text, textbook chapters, web content) from DataIngestion Agent.
+  - Uses the **Text Chunker** tool to split text into manageable chunks (e.g., 500-word segments) to optimize embedding quality.
+  - Uses the **Embedding Model** tool (e.g., Sentence-BERT) to convert chunks into vector embeddings, capturing semantic meaning.
+  - Stores embeddings in ChromaDB, indexed by course and content type (e.g., syllabus, textbook).
+- **Output**: Vector embeddings stored in ChromaDB.
+- **Collaboration**:
+  - Stores embeddings in ChromaDB, accessible by RetrieverAgent for semantic search.
+  - Operates in parallel with StorageAgent, ensuring all Course Data is processed.
+
+### 2. Frontend Workflow (Query Processing and Answer Generation)
+The frontend agents (Query, Retriever, Answer, Feedback) handle user interactions, from query input to answer delivery and feedback incorporation.
+
+#### QueryAgent
+- **Role**: Preprocesses user queries to initiate retrieval and generation.
+- **Operation**:
+  - Receives a **User Query** (e.g., “Explain topic X from course Y”).
+  - Validates query format (e.g., checks for course context, clarity).
+  - Extracts relevant metadata (e.g., course code, topic keywords) to guide retrieval.
+  - Reformats query if needed (e.g., converts natural language to structured query terms).
+- **Output**: Processed query (e.g., {course: “CS101”, topic: “databases”}).
+- **Collaboration**:
+  - Passes processed query to RetrieverAgent to fetch relevant data.
+  - Acts as the entry point for frontend processing, ensuring queries are well-formed.
+
+#### RetrieverAgent
+- **Role**: Retrieves relevant data from ChromaDB and SQLite3/MongoDB based on the processed query.
+- **Operation**:
+  - Receives processed query from QueryAgent.
+  - Uses the **ChromaDB Query Tool** to:
+    - Perform semantic search in ChromaDB, matching query embeddings to stored embeddings (e.g., finds syllabus sections, textbook excerpts on “databases”).
+    - Query SQLite3/MongoDB for structured data (e.g., CO-PO mappings, question banks for CS101).
+  - Ranks and filters results to ensure syllabus alignment (e.g., prioritizes CO-PO-relevant content).
+  - Combines unstructured (ChromaDB) and structured (SQLite3/MongoDB) data into a context package.
+- **Output**: Context package (e.g., syllabus chunks, CO-PO mappings, sample questions).
+- **Collaboration**:
+  - Sends context package to AnswerAgent for response generation.
+  - Relies on ChromaDB and SQLite3/MongoDB, populated by backend agents.
+
+#### AnswerAgent
+- **Role**: Generates syllabus-aligned, exam-focused, personalized answers.
+- **Operation**:
+  - Receives context package from RetrieverAgent (unstructured and structured data).
+  - Uses the **Language Model (Gemini)** to synthesize a response, ensuring:
+    - Syllabus alignment (e.g., covers CO-PO objectives).
+    - Exam focus (e.g., concise, structured for question types like short-answer or essay).
+    - Personalization (e.g., applies preferences from FeedbackAgent, such as formal tone).
+  - Formats the response (e.g., bullet points, paragraphs) based on query requirements.
+- **Output**: **Personalized Answer** (e.g., detailed explanation of “databases” for CS101).
+- **Collaboration**:
+  - Receives data from RetrieverAgent.
+  - Incorporates preferences from FeedbackAgent for personalization.
+  - Delivers answer to the user, triggering potential feedback.
+
+#### FeedbackAgent
+- **Role**: Processes user feedback to improve future answers.
+- **Operation**:
+  - Receives **User Feedback** (e.g., “Make answers more concise” or “Focus on examples”).
+  - Uses the **Feedback Parser** tool to extract preferences (e.g., tone: concise, content: example-heavy).
+  - Updates a user profile (stored internally or in a lightweight database) with preferences.
+  - Sends updated preferences to AnswerAgent for future responses.
+- **Output**: Updated user preferences (e.g., {tone: “concise”, content: “examples”}).
+- **Collaboration**:
+  - Sends preferences to AnswerAgent, enabling iterative personalization.
+  - Closes the feedback loop, ensuring system adaptability.
+
+### 3. Center Data Stores (Shared Repository)
+The center data stores (ChromaDB, SQLite3/MongoDB) facilitate collaboration between backend and frontend.
+
+#### ChromaDB
+- **Role**: Stores vector embeddings of unstructured data for semantic search.
+- **Operation**:
+  - Receives embeddings from EmbeddingAgent (via Embedding Model).
+  - Stores embeddings with metadata (e.g., course code, content type).
+  - Responds to RetrieverAgent queries, returning relevant text chunks (e.g., syllabus sections).
+  - Provides unstructured data to AnswerAgent for answer generation.
+- **Collaboration**:
+  - Written by EmbeddingAgent (backend).
+  - Read by RetrieverAgent and AnswerAgent (frontend).
+
+#### SQLite3/MongoDB
+- **Role**: Stores structured data for precise retrieval.
+- **Operation**:
+  - Receives structured data from StorageAgent (via Database Loader).
+  - Organizes data into tables/documents (e.g., metadata, CO-PO mappings, questions).
+  - Responds to RetrieverAgent queries, returning relevant records (e.g., CO-PO for CS101).
+  - Provides structured data to AnswerAgent for syllabus alignment.
+- **Collaboration**:
+  - Written by StorageAgent (backend).
+  - Read by RetrieverAgent and AnswerAgent (frontend).
+
+## Collaborative Workflow
+The agents work together in a modular, pipelined manner:
+1. **Backend Initialization**:
+   - DataIngestion Agent processes Course Data, splitting it via Data Parser.
+   - StorageAgent stores structured data in SQLite3/MongoDB.
+   - EmbeddingAgent embeds unstructured data in ChromaDB.
+   - These operate in parallel, populating the center data stores.
+2. **Frontend Query Processing**:
+   - QueryAgent preprocesses User Query, passing it to RetrieverAgent.
+   - RetrieverAgent fetches data from ChromaDB (unstructured) and SQLite3/MongoDB (structured).
+   - AnswerAgent generates a Personalized Answer using the Language Model.
+3. **Feedback Loop**:
+   - User provides Feedback, processed by FeedbackAgent.
+   - Feedback Parser updates preferences, sent to AnswerAgent for future answers.
+4. **Center as Hub**:
+   - ChromaDB and SQLite3/MongoDB connect backend (write) and frontend (read), ensuring data consistency.
+
+## Modularity and Debugging
+- **Modularity**:
+  - Each agent has a single responsibility (e.g., DataIngestion validates, Retriever fetches).
+  - Tools encapsulate specific functions (e.g., Data Parser, ChromaDB Query Tool).
+  - Backend and frontend are independent, connected via data stores.
+  - Feedback loop is isolated, affecting only AnswerAgent.
+- **Debugging**:
+  - Issues can be traced to specific agents (e.g., incorrect embeddings → EmbeddingAgent).
+  - Data stores provide a clear interface for inspecting stored/retrieved data.
+  - Feedback loop allows iterative improvements without disrupting core workflows.
+
+## Example Scenario
+- **Input**: Admin uploads CS101 Course Data (syllabus, textbook PDFs, CO-PO mappings).
+  - DataIngestion Agent validates and parses, sending structured data (CO-PO) to StorageAgent and unstructured data (syllabus) to EmbeddingAgent.
+  - StorageAgent stores CO-PO in SQLite3/MongoDB; EmbeddingAgent embeds syllabus in ChromaDB.
+- **Query**: User asks, “Explain databases in CS101.”
+  - QueryAgent preprocesses query (course: CS101, topic: databases).
+  - RetrieverAgent fetches syllabus chunks from ChromaDB and CO-PO mappings from SQLite3.
+  - AnswerAgent generates a concise, CO-PO-aligned answer using Gemini.
+- **Feedback**: User says, “Use more examples.”
+  - FeedbackAgent parses feedback, updates preferences (content: example-heavy).
+  - AnswerAgent applies preferences to future answers.
+
+## Final Notes
+This plan ensures the seven agents collaborate efficiently, with clear roles, modular interactions, and robust data flow. The backend prepares data, the frontend delivers answers, the center stores data, and the feedback loop enhances personalization, meeting the system’s requirements for syllabus-aligned, exam-focused responses.

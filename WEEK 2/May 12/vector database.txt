@@ -1,0 +1,18 @@
+A vector database is a specific kind of database that stores data in the form of high dimensional vector representation.
+The data can be anything like text,images..
+It can organize huge amount of data points based on similarity, this allows to find information in semantic or conceptual relevance.
+So they are used with LLM to create Rettrieval Augmented Generation(RAG) system.
+Now, how do we measure similarity between vectors in a high-dimensional space with hundreds or thousands of dimensions? This is where 
+similarity scores come into play. These scores are metrics that quantify the distance between two vectors. The two most commonly used 
+metrics are Cosine Similarity and Euclidean Distance. The cosine similarity measures the cosine of the angle between two vectors; a cosine 
+value closer to 1 indicates that the vectors are similar, whereas a value closer to 0 means they are orthogonal, or unrelated.
+
+For example, consider the sentence, "Rainy days make me sad." To find the most similar sentence in a set of pre-defined sentences, we would 
+calculate the cosine similarity between this new sentence and each existing sentence. The sentence "Rainy days can be gloomy" would yield the 
+highest similarity score because it shares a similar sentiment. On the other hand, a sentence like "Success is rewarding" would yield a much lower 
+similarity score, as it expresses a positive sentiment, in contrast to the negative sentiment of the new sentence.
+
+The goal of a vector database is to efficiently identify the most similar vectors. Without such a system, comparing each vector to every other 
+vector would be time-consuming, especially as the dataset grows. To solve this problem, vector databases use efficient algorithms that speed up 
+the process of similarity search, ensuring that results are returned quickly even with large datasets. This makes vector databases invaluable in 
+tasks like search engines, recommendation systems, and more, where understanding the semantic similarity between large amounts of data is key.

@@ -1,0 +1,58 @@
+[
+  {
+        "name": "tofu",
+        "calories_per_100g": 76,
+        "protein_per_100g": 8,
+        "carbs_per_100g": 1.9,
+        "fat_per_100g": 4.8,
+        "dietary": ["vegan"]
+    },
+  {
+      "name": "broccoli",
+        "calories_per_100g": 35,
+        "protein_per_100g": 2.8,
+        "carbs_per_100g": 7,
+        "fat_per_100g": 0.4,
+        "dietary": ["vegan"]
+  },
+  {
+    "name": "brown rice",
+    "calories_per_100g": 110,
+    "protein_per_100g": 2.5,
+    "carbs_per_100g": 23,
+    "fat_per_100g": 0.9,
+    "dietary": ["vegan"]
+  },
+  {
+      "name": "soy sauce",
+        "calories_per_100g": 53,
+        "protein_per_100g": 8.1,
+        "carbs_per_100g": 4.9,
+        "fat_per_100g": 0.6,
+        "dietary": ["vegan"]
+    },
+    {
+    "name": "tofu",
+    "calories_per_100g": 76,
+    "protein_per_100g": 8,
+    "carbs_per_100g": 1.9,
+    "fat_per_100g": 4.8,
+    "dietary": ["vegan"]
+  },
+  {
+    "name": "chickpeas",
+    "calories_per_100g": 164,
+    "protein_per_100g": 9,
+    "carbs_per_100g": 27,
+    "fat_per_100g": 2.6,
+    "dietary": ["vegan"]
+  },
+  {
+    "name": "spinach",
+    "calories_per_100g": 23,
+    "protein_per_100g": 2.9,
+    "carbs_per_100g": 3.6,
+    "fat_per_100g": 0.4,
+    "dietary": ["vegan"]
+  }
+]

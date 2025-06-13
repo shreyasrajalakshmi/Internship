@@ -1,0 +1,68 @@
+Single-Agent RAG
+In a single-agent Retrieval-Augmented Generation (RAG) system, a single large language model (LLM) manages the entire pipeline—from understanding 
+the query to retrieving relevant documents and generating the final response.
+
+Key Characteristics:
+A single model performs query analysis, retrieval guidance, and response generation.
+
+Simple architecture with minimal components and integration points.
+
+Direct flow: query → retrieval → response.
+
+Advantages:
+Lower computational and resource requirements.
+
+Easier to deploy, monitor, and maintain.
+
+Simplified debugging and performance tuning.
+
+Faster response times due to reduced inter-process communication.
+
+More straightforward prompt design and fine-tuning.
+
+Limitations:
+May experience cognitive bottlenecks with complex or multifaceted queries.
+
+Lacks the modularity needed for specialized or domain-specific reasoning.
+
+Limited in its ability to parallelize distinct tasks (e.g., retrieval vs synthesis).
+
+Response quality may be constrained by a single model’s capabilities and perspective.
+
+
+
+
+Multi-Agent RAG
+Multi-agent RAG architectures distribute responsibilities among multiple specialized agents, each focusing on a specific part of the pipeline.
+
+Key Characteristics:
+Roles are divided among dedicated agents (e.g., Query Analyzer, Retriever, Synthesizer, Critic).
+
+Agents interact via defined communication and coordination protocols.
+
+Supports hierarchical or peer-to-peer agent structures.
+
+Advantages:
+Greater reasoning depth through specialization.
+
+More effective at handling complex, multi-part or domain-specific queries.
+
+Allows self-evaluation and refinement via critic or validator agents.
+
+Improved adaptability to varied use cases and domains.
+
+Enables parallel processing, improving scalability and responsiveness.
+
+Limitations:
+Increased architectural and operational complexity.
+
+Greater demand on computational resources.
+
+Requires robust coordination mechanisms between agents.
+
+Debugging and performance tuning are more involved.
+
+Higher latency possible due to multi-agent communication overhead.
+
+Prompt design becomes more complex across interacting agents.
+
