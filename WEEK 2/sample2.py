@@ -1,4 +1,5 @@
 import asyncio
+import os
 from autogen_agentchat.agents import AssistantAgent
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 
@@ -18,7 +19,7 @@ custom_model_info = {
 
 model_client = OpenAIChatCompletionClient(
     model="llama3-70b-8192",
-    api_key="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",
+    api_key=os.getenv("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1",
     model_info=custom_model_info,
 )

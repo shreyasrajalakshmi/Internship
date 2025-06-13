@@ -9,6 +9,7 @@ from autogen_agentchat.messages import TextMessage
 import os
 import logging
 import re
+from dotenv import load_dotenv
 
 # === Setup Logging ===
 logging.basicConfig(
@@ -21,7 +22,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # === Gemini API Setup ===
-GOOGLE_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyDDaUTEWZGkEvfT46SVH_qOs_QPQJcHLsg")
+load_dotenv()
+GOOGLE_API_KEY = os.getenv("GEMINI_API_KEY")
 try:
     genai.configure(api_key=GOOGLE_API_KEY)
 except Exception as e:
